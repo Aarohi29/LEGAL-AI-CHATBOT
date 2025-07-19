@@ -1,21 +1,21 @@
 import streamlit as st
 import os
 import sys
-import fitz  # PyMuPDF
+import fitz
 import requests
 import json
 from deep_translator import GoogleTranslator
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# 🔧 Patch for PyTorch bug in Streamlit watcher
+
 if 'torch.classes' in sys.modules:
     del sys.modules['torch.classes']
 
-# ✅ Fix path for src imports
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# ---------------------- Utility Functions ----------------------
+# -------------------------------- Utility Functions --------------------------------
 
 def extract_text_from_pdf(pdf_path):
     doc = fitz.open(pdf_path)
@@ -28,13 +28,13 @@ def translate_to_english(text):
     try:
         return GoogleTranslator(source='auto', target='en').translate(text)
     except Exception as e:
-        return f"❌ Translation to English failed: {e}"
+        return f"Translation to English failed: {e}"
 
 def translate_from_english(text, target_lang):
     try:
         return GoogleTranslator(source='en', target=target_lang).translate(text)
     except Exception as e:
-        return f"❌ Translation to target language failed: {e}"
+        return f"Translation to target language failed: {e}"
 
 def detect_language(text):
     try:
@@ -101,13 +101,12 @@ def format_response(text):
     return "\n".join(formatted_lines)
 
 def determine_better_answer(ans1, ans2):
-    # Simple heuristic: prefer answer with more legal keywords or longer length
     keywords = ["must", "shall", "liable", "verdict", "judgment", "convicted", "sentence", "acquitted"]
     score1 = sum(ans1.lower().count(k) for k in keywords) + len(ans1.split())
     score2 = sum(ans2.lower().count(k) for k in keywords) + len(ans2.split())
     return "LLaMA 3" if score1 >= score2 else "Gemma"
 
-# ---------------------- Streamlit UI ----------------------
+# ---------------------------------------- Streamlit UI -----------------------------------------
 
 st.set_page_config(page_title="Legal AI Assistant", layout="centered")
 st.markdown("<h1 style='text-align: center;'>⚖️ LEGALEASE</h1><h3 style='text-align: center;'>Your Legal AI Assistant</h3>", unsafe_allow_html=True)
@@ -131,7 +130,7 @@ if uploaded:
     with st.spinner("🔍 Extracting text from document..."):
         raw_text = extract_text_from_pdf(temp_path)
         if not raw_text:
-            st.error("❌ No text found in the document.")
+            st.error("No text found in the document.")
             st.stop()
         st.session_state["text"] = raw_text
     st.success("✅ Document uploaded and text extracted.")
