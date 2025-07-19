@@ -1,0 +1,6 @@
+streamlit==1.35.0
+scikit-learn==1.5.0
+PyMuPDF==1.24.2
+deep-translator==1.11.4
+requests==2.31.0
+numpy==1.26.4
