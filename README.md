@@ -51,6 +51,7 @@ pip install -r requirements.txt
 Make sure you have [Ollama](https://ollama.com) installed.
 
 ```bash
+ollama serve
 ollama pull llama3
 ollama pull gemma
 ```
@@ -58,6 +59,7 @@ ollama pull gemma
 Then run both models:
 
 ```bash
+ollama serve
 ollama run llama3
 ollama run gemma
 ```
